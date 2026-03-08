@@ -83,7 +83,7 @@ export function FontFamily(props: ToolProps) {
       group="font"
       selectedItem={getFontById(currentFontFamily)?.title || defaultFontFamily}
       items={items}
-      menuWidth={130}
+      menuWidth={180}
       disabled={editor.isActive(CodeBlock.name)}
     />
   );

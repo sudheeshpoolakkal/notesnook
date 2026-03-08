@@ -76,3 +76,512 @@
   src: local(""),
        url("fonts/noto-serif-v21-vietnamese_latin-ext_latin_greek-ext_greek_cyrillic-ext_cyrillic-700italic.ttf") format("truetype"),
 }
+
+/* ===== CUSTOM FONTS ===== */
+
+/* Aquiline */
+@font-face {
+  font-family: "Aquiline";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Aquiline.ttf") format("truetype");
+}
+
+/* Attic */
+@font-face {
+  font-family: "Attic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Attic.ttf") format("truetype");
+}
+
+/* Bastarda */
+@font-face {
+  font-family: "Bastarda";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Bastarda.ttf") format("truetype");
+}
+
+/* Caladea */
+@font-face {
+  font-family: "Caladea";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Caladea-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Caladea";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Caladea-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Caladea";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Caladea-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Caladea";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Caladea-BoldItalic.ttf") format("truetype");
+}
+
+/* Caslon Antique */
+@font-face {
+  font-family: "Caslon Antique";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/CaslonAntique.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Caslon Antique";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/CaslonAntique-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Caslon Antique";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/CaslonAntique-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Caslon Antique";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/CaslonAntique-BoldItalic.ttf") format("truetype");
+}
+
+/* Charis SIL */
+@font-face {
+  font-family: "Charis SIL";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/CharisSIL-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Charis SIL";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/CharisSIL-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Charis SIL";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/CharisSIL-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Charis SIL";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/CharisSIL-BoldItalic.ttf") format("truetype");
+}
+
+/* Gentium */
+@font-face {
+  font-family: "Gentium";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Gentium-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Gentium";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Gentium-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Gentium";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Gentium-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Gentium";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Gentium-BoldItalic.ttf") format("truetype");
+}
+
+/* Gentium Book */
+@font-face {
+  font-family: "Gentium Book";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/GentiumBook-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Gentium Book";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/GentiumBook-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Gentium Book";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/GentiumBook-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Gentium Book";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/GentiumBook-BoldItalic.ttf") format("truetype");
+}
+
+/* Great Victorian */
+@font-face {
+  font-family: "Great Victorian";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/GreatVictorian-Standard.otf") format("opentype");
+}
+
+/* Harry Potter */
+@font-face {
+  font-family: "Harry Potter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/HARRYP__.TTF") format("truetype");
+}
+
+/* Hogwarts Wizard */
+@font-face {
+  font-family: "Hogwarts Wizard";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/HogwartsWizard.TTF") format("truetype");
+}
+
+/* Inkpot */
+@font-face {
+  font-family: "Inkpot";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Inkpot.ttf") format("truetype");
+}
+
+/* Literata */
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Literata-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Literata";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Literata-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Literata-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Literata";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Literata-BoldItalic.ttf") format("truetype");
+}
+
+/* Lumos */
+@font-face {
+  font-family: "Lumos";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/LUMOS.TTF") format("truetype");
+}
+
+/* Noto Sans Thai */
+@font-face {
+  font-family: "Noto Sans Thai";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/NotoSansThai-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Noto Sans Thai";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/NotoSansThai-Bold.ttf") format("truetype");
+}
+
+/* OFL Goudy */
+@font-face {
+  font-family: "OFL Goudy";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/OFLGoudyStMTT.ttf") format("truetype");
+}
+@font-face {
+  font-family: "OFL Goudy";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/OFLGoudyStMTT-Italic.ttf") format("truetype");
+}
+
+/* Old Standard TT */
+@font-face {
+  font-family: "Old Standard TT";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/OldStandardTT-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Old Standard TT";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/OldStandardTT-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Old Standard TT";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/OldStandardTT-Italic.ttf") format("truetype");
+}
+
+/* Parseltongue */
+@font-face {
+  font-family: "Parseltongue";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/PARSELTO.TTF") format("truetype");
+}
+
+/* Parchment MF */
+@font-face {
+  font-family: "Parchment MF";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/ParchmentMF.ttf") format("truetype");
+}
+
+/* Rustic Roadway */
+@font-face {
+  font-family: "Rustic Roadway";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/RusticRoadway.otf") format("opentype");
+}
+
+/* Sabon */
+@font-face {
+  font-family: "Sabon";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Sabon Roman.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Sabon";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Sabon Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Sabon";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Sabon BoldItalic.ttf") format("truetype");
+}
+
+/* Sarabun */
+@font-face {
+  font-family: "Sarabun";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Sarabun-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Sarabun";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Sarabun-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Sarabun";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Sarabun-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Sarabun";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Sarabun-BoldItalic.ttf") format("truetype");
+}
+
+/* Sorts Mill Goudy */
+@font-face {
+  font-family: "Sorts Mill Goudy";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/SortsMillGoudy-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Sorts Mill Goudy";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/SortsMillGoudy-Italic.ttf") format("truetype");
+}
+
+/* Source Serif 4 */
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/SourceSerif4-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/SourceSerif4-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/SourceSerif4-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Source Serif 4";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/SourceSerif4-BoldItalic.ttf") format("truetype");
+}
+
+/* Spectral */
+@font-face {
+  font-family: "Spectral";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Spectral-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Spectral";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Spectral-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Spectral";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Spectral-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Spectral";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Spectral-BoldItalic.ttf") format("truetype");
+}
+
+/* Averia Serif */
+@font-face {
+  font-family: "Averia Serif";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("fonts/averiaserif-light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Averia Serif";
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url("fonts/averiaserif-lightitalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Averia Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/averiaserif-regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Averia Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/averiaserif-italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Averia Serif";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/averiaserif-bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Averia Serif";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/averiaserif-bolditalic.ttf") format("truetype");
+}

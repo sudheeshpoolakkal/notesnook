@@ -52,12 +52,22 @@ export interface UserStore {
 
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
-  premium: false,
+  premium: true, // FORCE PREMIUM
   lastSynced: "Never",
   syncing: false,
   appLocked: false,
-  setUser: (user) => set({ user: user }),
-  setPremium: (premium) => set({ premium: premium }),
+  setUser: (user) => {
+    // FORCE PREMIUM: Patch user subscription
+    if (user) {
+      user.subscription = {
+        ...user.subscription,
+        plan: 3, // SubscriptionPlan.BELIEVER
+        status: 0, // SubscriptionStatus.ACTIVE
+      } as any;
+    }
+    set({ user: user, premium: true });
+  },
+  setPremium: (premium) => set({ premium: true }), // FORCE PREMIUM
   setSyncing: (syncing, status = SyncStatus.Passed) => {
     set({ syncing: syncing, lastSyncStatus: status });
   },

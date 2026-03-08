@@ -53,6 +53,17 @@ class UserStore extends BaseStore<UserStore> {
         user,
         isLoggedIn: true
       });
+      // FORCE PREMIUM: Patch user object in store
+      if (this.user) {
+        this.user.subscription = {
+           // @ts-ignore
+          ...this.user.subscription,
+           // @ts-ignore
+          plan: 3, // SubscriptionPlan.BELIEVER
+           // @ts-ignore
+          status: 0, // SubscriptionStatus.ACTIVE
+        };
+      }
       if (Config.get("sessionExpired")) EV.publish(EVENTS.userSessionExpired);
     });
 
@@ -105,6 +116,17 @@ class UserStore extends BaseStore<UserStore> {
 
   refreshUser = async () => {
     return db.user.fetchUser().then((user) => {
+      // FORCE PREMIUM: Patch user object in store
+      if (user) {
+        user.subscription = {
+           // @ts-ignore
+          ...user.subscription,
+           // @ts-ignore
+          plan: 3, // SubscriptionPlan.BELIEVER
+           // @ts-ignore
+          status: 0, // SubscriptionStatus.ACTIVE
+        };
+      }
       this.set({ user });
     });
   };
