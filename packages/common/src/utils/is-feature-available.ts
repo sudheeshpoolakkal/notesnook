@@ -572,8 +572,8 @@ export async function areFeaturesAvailable<TIds extends FeatureId[]>(
 
 async function getUserPlan() {
   const user = await db.user.getUser();
-  const plan = user?.subscription?.plan || SubscriptionPlan.FREE;
-  return plan;
+  // FORCE PREMIUM: Always return BELIEVER checking logic
+  return SubscriptionPlan.BELIEVER;
 }
 
 async function availableOn(id: FeatureId, value?: number) {
