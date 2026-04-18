@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { LegendList } from "@legendapp/list";
 import {
   Attachment,
   FilteredSelector,
@@ -28,7 +27,7 @@ import {
 import { strings } from "@notesnook/intl";
 import { useThemeColors } from "@notesnook/theme";
 import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { ScrollView } from "react-native-actions-sheet";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import create from "zustand";
@@ -313,6 +312,10 @@ export const AttachmentDialog = ({
     });
   };
 
+  db.attachments.orphaned.items().then((r) => {
+    console.log(r);
+  });
+
   return (
     <>
       {isSheet ? (
@@ -509,7 +512,7 @@ export const AttachmentDialog = ({
           </ScrollView>
         </View>
 
-        <LegendList
+        <FlatList
           renderScrollComponent={(props) => <ScrollView {...props} />}
           keyboardDismissMode="none"
           keyboardShouldPersistTaps="always"
@@ -543,7 +546,6 @@ export const AttachmentDialog = ({
               }}
             />
           }
-          estimatedItemSize={50}
           data={loading ? [] : attachments?.placeholders || []}
           extraData={attachments}
           renderItem={renderItem}

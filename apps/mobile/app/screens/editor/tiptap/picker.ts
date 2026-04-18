@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import Sodium from "@ammarahmed/react-native-sodium";
 import { isFeatureAvailable } from "@notesnook/common";
-import { isImage } from "@notesnook/core";
 import { strings } from "@notesnook/intl";
 import {
   DocumentPickerOptions,
@@ -34,6 +33,7 @@ import { Image, openCamera, openPicker } from "react-native-image-crop-picker";
 import { DatabaseLogger, db } from "../../../common/database";
 import filesystem from "../../../common/filesystem";
 import { compressToFile } from "../../../common/filesystem/compress";
+import { santizeUri } from "../../../common/filesystem/utils";
 import AttachImage from "../../../components/dialogs/attach-image-dialog";
 import { ToastManager } from "../../../services/event-manager";
 import PremiumService from "../../../services/premium";
@@ -41,7 +41,6 @@ import { useSettingStore } from "../../../stores/use-setting-store";
 import { useUserStore } from "../../../stores/use-user-store";
 import { useTabStore } from "./use-tab-store";
 import { editorController, editorState } from "./utils";
-import { santizeUri } from "../../../common/filesystem/utils";
 
 type PickerOptions = {
   noteId?: string;
@@ -90,6 +89,7 @@ const file = async (fileOptions: PickerOptions) => {
         message: featureResult.error,
         type: "error"
       });
+      return;
     }
 
     if (fileCopyUri.status === "error") {
@@ -102,7 +102,7 @@ const file = async (fileOptions: PickerOptions) => {
       return;
     }
 
-    let uri = santizeUri(fileCopyUri.localUri);
+    const uri = santizeUri(fileCopyUri.localUri);
     const hash = await Sodium.hashFile({
       uri: uri,
       type: "url"
@@ -128,30 +128,16 @@ const file = async (fileOptions: PickerOptions) => {
       useTabStore.getState().getNoteIdForTab(fileOptions.tabId) ===
         fileOptions.noteId
     ) {
-      if (isImage(file.type || "application/octet-stream")) {
-        editorController.current?.commands.insertImage(
-          {
-            hash: hash,
-            filename: fileName,
-            mime: file.type || "application/octet-stream",
-            size: file.size || 0,
-            dataurl: (await db.attachments.read(hash, "base64")) as string,
-            type: "image"
-          },
-          fileOptions.tabId
-        );
-      } else {
-        editorController.current?.commands.insertAttachment(
-          {
-            hash: hash,
-            filename: fileName,
-            mime: file.type || "application/octet-stream",
-            size: file.size || 0,
-            type: "file"
-          },
-          fileOptions.tabId
-        );
-      }
+      editorController.current?.commands.insertAttachment(
+        {
+          hash: hash,
+          filename: fileName,
+          mime: file.type || "application/octet-stream",
+          size: file.size || 0,
+          type: "file"
+        },
+        fileOptions.tabId
+      );
     } else {
       throw new Error("Failed to attach file, no tabId is set");
     }
@@ -286,6 +272,7 @@ const handleImageResponse = async (
         message: featureResult.error,
         type: "error"
       });
+      return;
     }
 
     const b64 = `data:${image.mime};base64, ` + image.data;

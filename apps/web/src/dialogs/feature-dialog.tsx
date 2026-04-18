@@ -89,38 +89,7 @@ const features: Record<FeatureKeys, Feature> = {
             )
           }
         ]
-      : [
-          {
-            title: "Import/export tables as CSV",
-            subtitle:
-              "You can now import and export CSV files as tables directly in the editor."
-          },
-          {
-            title: "Customizable monograph title",
-            subtitle:
-              "You can now set a custom title for your monographs different from the note title."
-          },
-          {
-            title: "Expiring notes",
-            subtitle:
-              "Set an expiration date for your notes after which they will be automatically moved to trash."
-          },
-          {
-            title: "Change note's created date",
-            subtitle:
-              "You can now change a note's created date from the note properties panel."
-          },
-          {
-            title: "Customizable line height",
-            subtitle:
-              "You can now customize the line height in the editor from Settings > Editor."
-          },
-          {
-            title: "Change week starting day",
-            subtitle:
-              "You can now change the starting day of the week from Settings > Behaviour."
-          }
-        ],
+      : [],
     cta: {
       title: strings.gotIt(),
       icon: Checkmark,
@@ -192,7 +161,11 @@ export const FeatureDialog = DialogManager.register(function FeatureDialog(
           >
             <Flex sx={{ alignItems: "center", justifyContent: "start" }}>
               {feature.icon && <feature.icon size={14} color="accent" />}
-              <Text variant="subtitle" ml={1} sx={{ fontWeight: "normal" }}>
+              <Text
+                variant="subtitle"
+                ml={feature.icon ? 1 : 0}
+                sx={{ fontWeight: "normal" }}
+              >
                 {feature.title}
               </Text>
             </Flex>

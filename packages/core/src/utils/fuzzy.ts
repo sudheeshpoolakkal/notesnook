@@ -31,6 +31,50 @@ export function fuzzy<T>(
     suffix?: string;
   } = {}
 ): T[] {
+  const results = fuzzyMatch(query, items, getIdentifier, fields, options);
+  if (results.size === 0) return [];
+
+  // if the query contains spaces & other non-alphanumeric characters, then we
+  // should search again with a sanitized query to catch more matches.
+  const sanitizedQuery = sanitize(query);
+  if (sanitizedQuery !== query) {
+    for (const [key, value] of fuzzyMatch(
+      sanitizedQuery,
+      items,
+      getIdentifier,
+      fields,
+      options
+    )) {
+      const matchInFirstSearch = results.get(key);
+      if (matchInFirstSearch) {
+        // just give it an extra bump because matches from first search
+        // must always be higher as they probably match much more closely
+        // with the query given by the user.
+        matchInFirstSearch.score += value.score;
+        continue;
+      }
+      results.set(key, value);
+    }
+  }
+
+  const matches = Array.from(results.entries())
+    .sort((a, b) => b[1].score - a[1].score)
+    .map((item) => item[1].item);
+
+  return matches;
+}
+
+function fuzzyMatch<T>(
+  query: string,
+  items: T[],
+  getIdentifier: (item: T) => string,
+  fields: Partial<Record<keyof T, number>>,
+  options: {
+    limit?: number;
+    prefix?: string;
+    suffix?: string;
+  } = {}
+) {
   const results: Map<
     string,
     {
@@ -45,7 +89,8 @@ export function fuzzy<T>(
     const identifier = getIdentifier(item);
 
     for (const field in fields) {
-      const result = match(query, `${item[field]}`);
+      const value = `${item[field]}`;
+      const result = match(query, value);
       if (!result.match) continue;
 
       const oldMatch = results.get(identifier);
@@ -68,11 +113,10 @@ export function fuzzy<T>(
       }
     }
   }
+  return results;
+}
 
-  if (results.size === 0) return [];
-
-  const sorted = Array.from(results.entries());
-  sorted.sort((a, b) => b[1].score - a[1].score);
-
-  return sorted.map((item) => item[1].item);
+const SEPARATORS = /[^a-zA-Z0-9]+/g;
+function sanitize(str: string): string {
+  return str.replace(SEPARATORS, "").trim() || str;
 }

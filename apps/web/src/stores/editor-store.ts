@@ -286,14 +286,7 @@ class EditorStore extends BaseStore<EditorStore> {
         const clearIds: string[] = [];
         for (const session of sessions) {
           if (session.type === "new") continue;
-          const noteId = isDeleted(item)
-            ? null
-            : item.type === "note"
-            ? item.id
-            : item.type === "tiptap"
-            ? item.noteId
-            : null;
-          if (noteId && session.note.id !== noteId) continue;
+          if (session.note.id !== item.id && session.note.contentId !== item.id) continue;
           if (isDeleted(item) || isTrashItem(item))
             clearIds.push(session.tabId);
           // if a note becomes conflicted, reopen the session
@@ -959,7 +952,18 @@ class EditorStore extends BaseStore<EditorStore> {
       if (index > -1) {
         if (options?.force)
           session.nonce = (state.sessions[index]?.nonce || 0) + 1;
-        state.sessions[index] = session;
+        const oldSession = state.sessions[index];
+        // SPECIAL CASE: when a user types in a new session, it gets converted
+        // into a default session with the same id. In this case, we want to
+        // keep the content that the user has typed in the editor instead of
+        // replacing it with the content of the note (which can be stale).
+        if (
+          oldSession.type === "new" &&
+          session.type === "default" &&
+          !!oldSession.content
+        )
+          state.sessions[index] = { ...session, content: oldSession.content };
+        else state.sessions[index] = session;
       } else state.sessions.push(session);
     });
 

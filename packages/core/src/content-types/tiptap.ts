@@ -94,7 +94,7 @@ export class Tiptap {
   }
 
   toTitle() {
-    return extractTitle(this.data, 150);
+    return extractTitle(this.data, 60);
   }
 
   // isEmpty() {
@@ -363,6 +363,7 @@ export class Tiptap {
             break;
           }
           case "iframe":
+          case "audio":
           case "span": {
             const hash = attr[ATTRIBUTES.hash];
             if (!hash) return;

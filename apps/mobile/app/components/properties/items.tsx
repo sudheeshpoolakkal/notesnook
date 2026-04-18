@@ -33,7 +33,6 @@ import AppIcon from "../ui/AppIcon";
 import { Button } from "../ui/button";
 import { Pressable } from "../ui/pressable";
 import Paragraph from "../ui/typography/paragraph";
-import { Dialog } from "../dialog";
 
 const TOP_BAR_ITEMS: ActionId[] = [
   "pin",
@@ -319,7 +318,9 @@ export const Items = ({
     [
       colors.error.icon,
       colors.primary.accent,
+      colors.primary.border,
       colors.secondary.icon,
+      colors.static.orange,
       columnItemWidth,
       topBarSorting
     ]
@@ -327,8 +328,9 @@ export const Items = ({
 
   const getTopBarItemChunksOfFour = () => {
     const chunks = [];
-    for (let i = 0; i < topBarItems.length; i += 5) {
-      chunks.push(topBarItems.slice(i, i + 5));
+    const itemCount = shouldShrink ? 4 : 5;
+    for (let i = 0; i < topBarItems.length; i += itemCount) {
+      chunks.push(topBarItems.slice(i, i + itemCount));
     }
     return chunks;
   };
@@ -375,7 +377,8 @@ export const Items = ({
                   style={{
                     flexDirection: "row",
                     paddingHorizontal: DefaultAppStyles.GAP,
-                    gap: 5
+                    gap: 5,
+                    width: width
                   }}
                 >
                   {item.map(renderTopBarItem)}

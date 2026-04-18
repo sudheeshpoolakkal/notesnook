@@ -17,7 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EventHandler, EventManager, Note, NoteContent } from "@notesnook/core";
+import {
+  EventHandler,
+  EventManager,
+  ItemType,
+  Note,
+  NoteContent
+} from "@notesnook/core";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { RefObject } from "react";
 import { ActionSheetRef } from "react-native-actions-sheet";
@@ -32,25 +38,34 @@ import {
 } from "../utils/events";
 import { strings } from "@notesnook/intl";
 
+export enum VaultRequestType {
+  CreateVault = "createVault",
+  LockNote = "lockNote",
+  UnlockNote = "unlockNote",
+  PermanentUnlock = "permanentUnlock",
+  GoToEditor = "goToEditor",
+  ShareNote = "shareNote",
+  CopyNote = "copyNote",
+  DeleteNote = "deleteNote",
+  EnableFingerprint = "enableFingerprint",
+  RevokeFingerprint = "revokeFingerprint",
+  ChangePassword = "changePassword",
+  ClearVault = "clearVault",
+  DeleteVault = "deleteVault",
+  CustomAction = "customAction"
+}
+
 export type Vault = {
-  item: Note;
-  novault: boolean;
-  title: string;
-  description: string;
-  locked: boolean;
-  permanant: boolean;
-  goToEditor: boolean;
-  share: boolean;
-  deleteNote: boolean;
-  fingerprintAccess: boolean;
-  revokeFingerprintAccess: boolean;
-  changePassword: boolean;
-  clearVault: boolean;
-  deleteVault: boolean;
-  copyNote: boolean;
-  customActionTitle: string;
-  customActionParagraph: string;
-  onUnlock: (
+  item?: Note;
+  requestType: VaultRequestType;
+  title?: string;
+  description?: string;
+  paragraph?: string;
+  buttonTitle?: string;
+  positiveButtonType?: "errorShade" | "transparent" | "accent";
+  customActionTitle?: string;
+  customActionParagraph?: string;
+  onUnlock?: (
     item: Note & {
       content?: NoteContent<false>;
     },
@@ -75,6 +90,18 @@ export const eSubscribeEvent = <T = unknown>(
   return eventManager.subscribe(eventName, action);
 };
 
+export function sendItemUpdateEvent(id: string, type: ItemType) {
+  eSendEvent(`${type}:${id}`);
+}
+
+export function subscribeToItemUpdate(
+  id: string,
+  type: ItemType,
+  callback: EventHandler
+) {
+  return eSubscribeEvent(`${type}:${id}`, callback);
+}
+
 export const eUnSubscribeEvent = <T = unknown>(
   eventName: string,
   action: EventHandler
@@ -87,7 +114,7 @@ export const eSendEvent = (eventName: string, ...args: any[]) => {
   eventManager.publish(eventName, ...args);
 };
 
-export const openVault = (data: Partial<Vault>) => {
+export const openVault = (data: Vault) => {
   eSendEvent(eOpenVaultDialog, data);
 };
 

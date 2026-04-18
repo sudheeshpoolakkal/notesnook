@@ -207,7 +207,7 @@ export const useEditorEvents = (
     return () => {
       subscriptions.forEach((subscription) => subscription.remove());
     };
-  }, [editor.commands, editor.postMessage]);
+  }, [editor, editor.commands, editor.postMessage]);
   useEffect(() => {
     if (loading) return;
     if (typeof defaultFontFamily === "object") {
@@ -534,15 +534,24 @@ export const useEditorEvents = (
         }
 
         case EditorEvents.getAttachmentData: {
-          const attachment = (editorMessage.value as any)
-            ?.attachment as Attachment;
+          const data = (editorMessage.value as any)?.attachment as Attachment;
 
+          const attachment = await db.attachments.attachment(data.hash);
+
+          if (!attachment) {
+            editor.postMessage(NativeEvents.resolve, {
+              resolverId: editorMessage.resolverId,
+              data: undefined
+            });
+            break;
+          }
           DatabaseLogger.log(
-            `Getting attachment data: ${attachment?.hash} ${attachment?.type}`
+            `Getting attachment data: ${attachment.mimeType} ${attachment.hash} ${data.type}`
           );
           downloadAttachment(attachment.hash, true, {
-            base64: attachment.type === "image",
-            text: attachment.type === "web-clip",
+            base64:
+              data.type === "image" || attachment.mimeType?.startsWith("audio"),
+            text: data.type === "web-clip",
             silent: true,
             groupId: editor.note.current?.id,
             cache: true
@@ -755,7 +764,7 @@ export const useEditorEvents = (
             let filePath: string;
             let fileName: string;
             if (Platform.OS === "android") {
-              let file = await ScopedStorage.createDocument(
+              const file = await ScopedStorage.createDocument(
                 "table.csv",
                 "text/csv",
                 csv,

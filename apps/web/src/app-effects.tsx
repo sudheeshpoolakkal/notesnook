@@ -64,12 +64,12 @@ export default function AppEffects() {
         await updateLastSynced();
         await initUser();
         // await resetNotices();
-        setIsVaultCreated(await db.vault.exists());
 
         await FeatureDialog.show({ featureName: "highlights" });
         await scheduleBackups();
         await scheduleFullBackups();
         await scheduleExpiredNotesDeletion();
+
         if (useSettingStore.getState().isFullOfflineMode)
           // NOTE: we deliberately don't await here because we don't want to pause execution.
           db.attachments.cacheAttachments().catch(logger.error);

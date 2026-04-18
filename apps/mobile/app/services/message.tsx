@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+import React from "react";
 import { strings } from "@notesnook/intl";
 import { Platform } from "react-native";
 import { AuthMode } from "../components/auth/common";

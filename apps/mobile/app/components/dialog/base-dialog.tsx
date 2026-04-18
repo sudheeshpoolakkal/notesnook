@@ -23,7 +23,6 @@ import {
   ColorValue,
   KeyboardAvoidingView,
   Modal,
-  Platform,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,

@@ -48,11 +48,12 @@ import Toggle from "./toggle";
 import { EditNoteCreationDateDialog } from "../../dialogs/edit-note-creation-date-dialog";
 import ScrollContainer from "../scroll-container";
 import {
-  getFormattedDate,
+  formatDate,
   usePromise,
   ResolvedItem,
   useUnresolvedItem
 } from "@notesnook/common";
+import { useStore as useSettingStore } from "../../stores/setting-store";
 import { ScopedThemeProvider } from "../theme-provider";
 import { ListItemWrapper } from "../list-container/list-profiles";
 import { VirtualizedList } from "../virtualized-list";
@@ -103,25 +104,34 @@ type MetadataItem<T extends "dateCreated" | "dateEdited"> = {
   value: (value: number) => string;
 };
 
-const metadataItems = [
-  {
-    key: "dateCreated",
-    label: strings.createdAt(),
-    value: (date) => getFormattedDate(date || Date.now())
-  } as MetadataItem<"dateCreated">,
-  {
-    key: "dateEdited",
-    label: strings.lastEditedAt(),
-    value: (date) => (date ? getFormattedDate(date) : "never")
-  } as MetadataItem<"dateEdited">
-];
-
 type EditorPropertiesProps = {
   sessionId: string;
 };
 function EditorProperties(props: EditorPropertiesProps) {
   const toggleProperties = useEditorStore((store) => store.toggleProperties);
   const isFocusMode = useAppStore((store) => store.isFocusMode);
+  const dateFormat = useSettingStore((store) => store.dateFormat);
+  const timeFormat = useSettingStore((store) => store.timeFormat);
+  const metadataItems = [
+    {
+      key: "dateCreated",
+      label: strings.createdAt(),
+      value: (date: number) =>
+        formatDate(date || Date.now(), {
+          type: "date-time",
+          dateFormat,
+          timeFormat
+        })
+    } as MetadataItem<"dateCreated">,
+    {
+      key: "dateEdited",
+      label: strings.lastEditedAt(),
+      value: (date: number) =>
+        date
+          ? formatDate(date, { type: "date-time", dateFormat, timeFormat })
+          : "never"
+    } as MetadataItem<"dateEdited">
+  ];
   const session = useEditorStore((store) =>
     store.getSession(props.sessionId, [
       "default",
@@ -676,7 +686,7 @@ function Colors({ noteId, color }: { noteId: string; color?: string }) {
                 <Checkmark
                   color="white"
                   size={18}
-                  sx={{ position: "absolute", left: "8px" }}
+                  sx={{ position: "absolute", left: "4px" }}
                 />
               )}
             </Flex>

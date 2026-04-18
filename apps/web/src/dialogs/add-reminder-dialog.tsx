@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import NoteItem from "../components/note";
 import Dialog from "../components/dialog";
 import Field from "../components/field";
 import { Box, Button, Flex, Label, Radio, Text } from "@theme-ui/components";
@@ -32,13 +33,18 @@ import { usePersistentState } from "../hooks/use-persistent-state";
 import { DayPicker } from "../components/day-picker";
 import { PopupPresenter } from "@notesnook/ui";
 import { useStore as useThemeStore } from "../stores/theme-store";
-import { getFormattedDate, useIsFeatureAvailable } from "@notesnook/common";
+import {
+  getFormattedDate,
+  useIsFeatureAvailable,
+  usePromise
+} from "@notesnook/common";
 import { MONTHS_FULL, getTimeFormat } from "@notesnook/core";
 import { Note, Reminder } from "@notesnook/core";
 import { BaseDialogProps, DialogManager } from "../common/dialog-manager";
 import { strings } from "@notesnook/intl";
 import { checkFeature } from "../common";
 import { setTimeOnly, setDateOnly } from "../utils/date-time";
+import Skeleton from "react-loading-skeleton";
 
 dayjs.extend(customParseFormat);
 
@@ -148,6 +154,15 @@ export const AddReminderDialog = DialogManager.register(
     const theme = useThemeStore((store) => store.colorScheme);
     const dateInputRef = useRef<HTMLInputElement>(null);
     const repeatModeAvailability = useIsFeatureAvailable("recurringReminders");
+    const referencedNotes = usePromise(
+      () =>
+        reminder?.id
+          ? db.relations
+              .to({ id: reminder.id, type: "reminder" }, "note")
+              .resolve()
+          : null,
+      [reminder?.id]
+    );
 
     const repeatsDaily =
       (selectedDays.length === 7 && recurringMode === RecurringModes.WEEK) ||
@@ -363,7 +378,17 @@ export const AddReminderDialog = DialogManager.register(
           </Flex>
         ) : null}
 
-        <Flex sx={{ gap: 2, overflowX: "auto", mt: 2 }}>
+        <Flex
+          sx={{
+            gap: 2,
+            overflowX: "auto",
+            mt: 2,
+            flexDirection:
+              mode === Modes.REPEAT && recurringMode === RecurringModes.YEAR
+                ? "column"
+                : "row"
+          }}
+        >
           {mode === Modes.ONCE ? (
             <>
               <Field
@@ -417,7 +442,7 @@ export const AddReminderDialog = DialogManager.register(
               </PopupPresenter>
             </>
           ) : recurringMode === RecurringModes.YEAR ? (
-            <>
+            <Flex sx={{ gap: 2 }}>
               <LabeledSelect
                 id="month"
                 label={strings.month()}
@@ -444,13 +469,14 @@ export const AddReminderDialog = DialogManager.register(
                   setDate((d) => d.date(parseInt(day)));
                 }}
               />
-            </>
+            </Flex>
           ) : null}
           <Field
             id="time"
             label={strings.time()}
             required
             data-test-id="time-input"
+            sx={{ alignSelf: "flex-start" }}
             helpText={`${
               db.settings.getTimeFormat() === "12-hour"
                 ? "hh:mm AM/PM"
@@ -509,9 +535,38 @@ export const AddReminderDialog = DialogManager.register(
           </Text>
         ) : (
           <Text variant="subBody" sx={{ mt: 1 }}>
-            {strings.reminderStarts(date.format(db.settings.getDateFormat()), date.format(timeFormat()))}
+            {strings.reminderStarts(
+              date.format(db.settings.getDateFormat()),
+              date.format(timeFormat())
+            )}
           </Text>
         )}
+
+        {reminder ? (
+          referencedNotes && referencedNotes.status === "fulfilled" ? (
+            referencedNotes.value !== null &&
+            referencedNotes.value.length > 0 && (
+              <Flex
+                data-test-id="reminder-note-references"
+                sx={{ my: 2, gap: 1, flexDirection: "column" }}
+              >
+                <Text variant="body">
+                  {strings.note()} {strings.references()}:
+                </Text>
+                {referencedNotes.value.map((item) => (
+                  <NoteItem
+                    key={item.id}
+                    item={item}
+                    date={item.dateCreated}
+                    compact
+                  />
+                ))}
+              </Flex>
+            )
+          ) : (
+            <Skeleton count={1} />
+          )
+        ) : null}
       </Dialog>
     );
   },

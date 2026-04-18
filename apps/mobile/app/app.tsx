@@ -23,7 +23,7 @@ import {
   THEME_COMPATIBILITY_VERSION,
   useThemeEngineStore
 } from "@notesnook/theme";
-import React, { useEffect } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { Appearance, I18nManager, Linking, StatusBar } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -106,8 +106,10 @@ let currTheme =
     : SettingsService.getProperty("lighTheme");
 useThemeEngineStore.getState().setTheme(currTheme);
 
-export const withTheme = (Element: (props: any) => JSX.Element) => {
-  return function AppWithThemeProvider(props: any) {
+export const withTheme = (
+  Element: (props: PropsWithChildren) => JSX.Element
+) => {
+  return function AppWithThemeProvider(props: PropsWithChildren) {
     const [colorScheme, darkTheme, lightTheme] = useThemeStore((state) => [
       state.colorScheme,
       state.darkTheme,
@@ -127,8 +129,12 @@ export const withTheme = (Element: (props: any) => JSX.Element) => {
           .then((theme) => {
             if (theme) {
               theme.colorScheme === "dark"
-                ? useThemeStore.getState().setDarkTheme(theme)
-                : useThemeStore.getState().setLightTheme(theme);
+                ? useThemeStore.setState({
+                    darkTheme: theme
+                  })
+                : useThemeStore.setState({
+                    lightTheme: theme
+                  });
             }
           })
           .catch(() => {
@@ -138,9 +144,9 @@ export const withTheme = (Element: (props: any) => JSX.Element) => {
 
       const listener = Appearance.addChangeListener(({ colorScheme }) => {
         if (colorScheme && SettingsService.getProperty("useSystemTheme")) {
-          useThemeStore
-            .getState()
-            .setColorScheme(colorScheme as "light" | "dark");
+          useThemeStore.setState({
+            colorScheme: colorScheme as "light" | "dark"
+          });
         }
       });
       return () => {

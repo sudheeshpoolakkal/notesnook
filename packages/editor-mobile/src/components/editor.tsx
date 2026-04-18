@@ -174,7 +174,7 @@ const Tiptap = ({
       element: getContentDiv(),
       editable: !tab.session?.readonly,
       editorProps: {
-        editable: () => !tab.session?.readonly,
+        editable: () => !tabRef.current.session?.readonly,
         handlePaste: (view, event) => {
           const hasFiles = event.clipboardData?.types?.some((type) =>
             type.startsWith("Files")
@@ -285,7 +285,7 @@ const Tiptap = ({
             restoreNoteSelection(scrollTop, selection);
           }
         }, 300);
-      }, 1);
+      }, 150);
     },
     [restoreNoteSelection]
   );
@@ -602,7 +602,7 @@ const Tiptap = ({
 
               <Title
                 titlePlaceholder={controller.titlePlaceholder}
-                readonly={settings.readonly}
+                readonly={tab.session?.readonly || settings.readonly || false}
                 controller={controllerRef}
                 title={controller.title}
                 fontFamily={settings.fontFamily}

@@ -24,7 +24,8 @@ import { StoreApi, UseBoundStore } from "zustand";
 import { useTotalNotes } from "../../hooks/use-db-item";
 import {
   eSubscribeEvent,
-  eUnSubscribeEvent
+  eUnSubscribeEvent,
+  ToastManager
 } from "../../services/event-manager";
 import { TreeItem } from "../../stores/create-notebook-tree-stores";
 import { SelectionStore } from "../../stores/item-selection-store";
@@ -35,6 +36,7 @@ import AppIcon from "../ui/AppIcon";
 import { IconButton } from "../ui/icon-button";
 import { Pressable } from "../ui/pressable";
 import Paragraph from "../ui/typography/paragraph";
+import { useRelationStore } from "../../stores/use-relation-store";
 
 export const NotebookItem = ({
   index,
@@ -70,13 +72,14 @@ export const NotebookItem = ({
   const notebook = item.notebook;
   const isFocused = focused;
   const { totalNotes, getTotalNotes } = useTotalNotes("notebook");
+  const updater = useRelationStore(state => state.updater);
   const getTotalNotesRef = React.useRef(getTotalNotes);
   getTotalNotesRef.current = getTotalNotes;
   const { colors } = useThemeColors();
 
   useEffect(() => {
     getTotalNotesRef.current([item.notebook.id]);
-  }, [item.notebook]);
+  }, [item.notebook, updater]);
 
   useEffect(() => {
     const onNotebookUpdate = (id?: string) => {
@@ -98,10 +101,11 @@ export const NotebookItem = ({
           item.depth === 0
             ? undefined
             : item.depth < 6
-              ? 15 * item.depth
-              : 15 * 5,
+            ? 15 * item.depth
+            : 15 * 5,
         width: "100%",
-        marginTop: 2
+        marginTop: 2,
+        opacity: item.disabled ? 0.5 : 1
       }}
     >
       <Pressable
@@ -187,8 +191,8 @@ export const NotebookItem = ({
               !item.hasChildren || disableExpand
                 ? "book-outline"
                 : expanded
-                  ? "chevron-down"
-                  : "chevron-right"
+                ? "chevron-down"
+                : "chevron-right"
             }
           />
 
@@ -241,6 +245,7 @@ export const NotebookItem = ({
               name="plus"
               size={AppFontSize.md}
               testID={`add-notebook-${index}`}
+              color={colors.primary.icon}
               top={0}
               left={0}
               bottom={0}

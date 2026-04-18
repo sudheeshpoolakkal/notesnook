@@ -30,6 +30,7 @@ import {
 import { strings } from "@notesnook/intl";
 import notifee from "@notifee/react-native";
 import NetInfo, { NetInfoSubscription } from "@react-native-community/netinfo";
+import dayjs from "dayjs";
 import React, { useCallback, useEffect, useRef } from "react";
 import {
   AppState,
@@ -48,6 +49,7 @@ import * as RNIap from "react-native-iap";
 import { DatabaseLogger, db, setupDatabase } from "../common/database";
 import { initializeLogger } from "../common/database/logger";
 import { MMKV } from "../common/database/mmkv";
+import { deleteDCacheFiles } from "../common/filesystem/io";
 import { endProgress, startProgress } from "../components/dialogs/progress";
 import Migrate from "../components/sheets/migrate";
 import NewFeature from "../components/sheets/new-feature";
@@ -58,11 +60,7 @@ import {
   resetTabStore,
   useTabStore
 } from "../screens/editor/tiptap/use-tab-store";
-import {
-  clearAppState,
-  editorController,
-  editorState
-} from "../screens/editor/tiptap/utils";
+import { editorController, editorState } from "../screens/editor/tiptap/utils";
 import { useDragState } from "../screens/settings/editor/state";
 import BackupService from "../services/backup";
 import BiometricService from "../services/biometrics";
@@ -89,11 +87,13 @@ import { clearAllStores, initAfterSync } from "../stores";
 import { refreshAllStores } from "../stores/create-db-collection-store";
 import { useAttachmentStore } from "../stores/use-attachment-store";
 import { useMessageStore } from "../stores/use-message-store";
+import { useRelationStore } from "../stores/use-relation-store";
 import { useSettingStore } from "../stores/use-setting-store";
 import { SyncStatus, useUserStore } from "../stores/use-user-store";
 import { updateStatusBarColor } from "../utils/colors";
 import { BETA } from "../utils/constants";
 import {
+  eAfterSync,
   eCloseSheet,
   eEditorReset,
   eLoginSessionExpired,
@@ -104,12 +104,8 @@ import {
 } from "../utils/events";
 import { getGithubVersion } from "../utils/github-version";
 import { fluidTabsRef } from "../utils/global-refs";
-import { NotesnookModule } from "../utils/notesnook-module";
 import { sleep } from "../utils/time";
 import useFeatureManager from "./use-feature-manager";
-import { deleteDCacheFiles } from "../common/filesystem/io";
-import dayjs from "dayjs";
-import { useRelationStore } from "../stores/use-relation-store";
 
 const onCheckSyncStatus = async (type: SyncStatusEvent) => {
   const { disableSync, disableAutoSync } = SettingsService.get();
@@ -172,7 +168,6 @@ const onAppOpenedFromURL = async (event: {
     if (url.startsWith("https://app.notesnook.com/account/verified")) {
       await onUserEmailVerified();
     } else if (url.startsWith("ShareMedia://QuickNoteWidget")) {
-      clearAppState();
       editorState().movedAway = false;
       eSendEvent(eOnLoadNote, { newNote: true });
       fluidTabsRef.current?.goToPage("editor", false);
@@ -332,6 +327,7 @@ const onLogout = async (reason: string) => {
   SettingsService.resetSettings();
   useUserStore.getState().setUser(null);
   useUserStore.getState().setSyncing(false);
+  eSendEvent(eAfterSync);
 };
 
 async function checkForShareExtensionLaunchedInBackground() {
@@ -356,23 +352,9 @@ async function checkForShareExtensionLaunchedInBackground() {
       if (note) setTimeout(() => eSendEvent("loadingNote", note), 1);
       MMKV.removeItem("shareExtensionOpened");
     }
-  } catch (e) {}
-}
-
-async function saveEditorState() {
-  if (!editorState().movedAway) {
-    const id = useTabStore.getState().getCurrentNoteId();
-    const note = id ? await db.notes.note(id) : undefined;
-    const locked = note && (await db.vaults.itemExists(note));
-    if (locked) return;
-    const state = JSON.stringify({
-      editing: editorState().currentlyEditing,
-      movedAway: editorState().movedAway,
-      timestamp: Date.now()
-    });
-    NotesnookModule.setAppState(state);
-  } else {
-    NotesnookModule.setAppState("");
+  } catch (e) {
+    /**
+    empty */
   }
 }
 
@@ -590,13 +572,13 @@ export const useAppEvents = () => {
   }, [isAppLoading, onSyncComplete]);
 
   useEffect(() => {
-    if (initialUrl) {
+    if (initialUrl && !isAppLoading) {
       onAppOpenedFromURL({
         url: initialUrl!,
         isInitialUrl: true
       });
     }
-  }, [initialUrl]);
+  }, [initialUrl, isAppLoading]);
 
   const subscribeToPurchaseListeners = useCallback(async () => {
     if (Platform.OS === "android") {
@@ -836,7 +818,6 @@ export const useAppEvents = () => {
         Sync.run("global", false, "full");
         reconnectSSE();
         await checkForShareExtensionLaunchedInBackground();
-        NotesnookModule.setAppState("");
         let user = await db.user.getUser();
         if (user && !user?.isEmailConfirmed) {
           try {
@@ -859,7 +840,6 @@ export const useAppEvents = () => {
           eSendEvent(eEditorReset);
         }
       } else {
-        await saveEditorState();
         if (
           SettingsService.canLockAppInBackground() &&
           !useSettingStore.getState().requestBiometrics &&

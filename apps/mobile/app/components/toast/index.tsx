@@ -120,10 +120,9 @@ export const Toast = ({ context = "global" }) => {
         alignItems: "center",
         alignSelf: "center",
         bottom:
-          Platform.OS === "android"
-            ? Math.max(insets.bottom, 40)
-            : Math.max(insets.bottom, 40) +
-              (keyboard.keyboardShown ? keyboard.keyboardHeight : 0),
+          insets.bottom +
+          15 +
+          (keyboard.keyboardShown ? Math.max(0, keyboard.keyboardHeight) : 0),
         position: "absolute",
         zIndex: 999,
         elevation: 15

@@ -17,23 +17,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { isFeatureAvailable } from "@notesnook/common";
+import { strings } from "@notesnook/intl";
+import { useThemeColors } from "@notesnook/theme";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { DraxProvider, DraxScrollView } from "react-native-drax";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
+import PaywallSheet from "../../../components/sheets/paywall";
 import { Button } from "../../../components/ui/button";
 import { Notice } from "../../../components/ui/notice";
 import Paragraph from "../../../components/ui/typography/paragraph";
-import PremiumService from "../../../services/premium";
-import { useThemeColors } from "@notesnook/theme";
+import { ToastManager } from "../../../services/event-manager";
 import { AppFontSize } from "../../../utils/size";
+import { DefaultAppStyles } from "../../../utils/styles";
 import { Group } from "./group";
 import { DragState, useDragState } from "./state";
-import { strings } from "@notesnook/intl";
-import { DefaultAppStyles } from "../../../utils/styles";
-import { isFeatureAvailable } from "@notesnook/common";
-import { ToastManager } from "../../../services/event-manager";
-import PaywallSheet from "../../../components/sheets/paywall";
 export const ConfigureToolbar = () => {
   const data = useDragState((state) => state.data);
   const preset = useDragState((state) => state.preset);
@@ -41,7 +40,7 @@ export const ConfigureToolbar = () => {
 
   const renderGroups = () => {
     return data?.map((item, index) => (
-      <Group key={`group-${index}`} item={item} index={index} />
+      <Group key={`group-${index}-${item.length}`} item={item} index={index} />
     ));
   };
 
@@ -131,6 +130,7 @@ export const ConfigureToolbar = () => {
           style={{
             flex: 1
           }}
+          key={preset}
           scrollEventThrottle={13}
           showsVerticalScrollIndicator={false}
         >

@@ -25,7 +25,6 @@ import { Loader } from "../components/loader";
 import { showToast } from "../utils/toast";
 import AuthContainer from "../components/auth-container";
 import { AuthField, SubmitButton } from "./auth";
-import { createBackup, restoreBackupFile, selectBackupFile } from "../common";
 import Config from "../utils/config";
 import { ErrorText } from "../components/error-text";
 import { EVENTS, User } from "@notesnook/core";
@@ -33,29 +32,24 @@ import { RecoveryKeyDialog } from "../dialogs/recovery-key-dialog";
 import { strings } from "@notesnook/intl";
 import { useKeyStore } from "../interfaces/key-store";
 
-type RecoveryMethodType = "key" | "backup" | "reset";
+type RecoveryMethodType = "key" | "reset";
 type RecoveryMethodsFormData = Record<string, unknown>;
 
 type RecoveryKeyFormData = {
   recoveryKey: string;
 };
 
-type BackupFileFormData = {
-  backupFile: File;
-};
-
-type NewPasswordFormData = BackupFileFormData & {
+type NewPasswordFormData = {
   userResetRequired?: boolean;
   password: string;
   confirmPassword: string;
+  recoveryKey?: string;
 };
 
 type RecoveryFormData = {
   methods: RecoveryMethodsFormData;
   "method:key": RecoveryKeyFormData;
-  "method:backup": BackupFileFormData;
   "method:reset": NewPasswordFormData;
-  backup: RecoveryMethodsFormData;
   new: NewPasswordFormData;
   final: RecoveryMethodsFormData;
 };
@@ -73,9 +67,7 @@ type BaseRecoveryComponentProps<TRoute extends RecoveryRoutes> = {
 type RecoveryRoutes =
   | "methods"
   | "method:key"
-  | "method:backup"
   | "method:reset"
-  | "backup"
   | "new"
   | "final";
 type RecoveryProps = { route: RecoveryRoutes };
@@ -92,10 +84,6 @@ function getRouteComponent<TRoute extends RecoveryRoutes>(
       return RecoveryMethods as RecoveryComponent<TRoute>;
     case "method:key":
       return RecoveryKeyMethod as RecoveryComponent<TRoute>;
-    case "method:backup":
-      return BackupFileMethod as RecoveryComponent<TRoute>;
-    case "backup":
-      return BackupData as RecoveryComponent<TRoute>;
     case "method:reset":
     case "new":
       return NewPassword as RecoveryComponent<TRoute>;
@@ -108,9 +96,7 @@ function getRouteComponent<TRoute extends RecoveryRoutes>(
 const routePaths: Record<RecoveryRoutes, string> = {
   methods: "/account/recovery/methods",
   "method:key": "/account/recovery/method/key",
-  "method:backup": "/account/recovery/method/backup",
   "method:reset": "/account/recovery/method/reset",
-  backup: "/account/recovery/backup",
   new: "/account/recovery/new",
   final: "/account/recovery/final"
 };
@@ -138,6 +124,7 @@ function useAuthenticateUser({
         const user = await db.user.fetchUser();
         setUser(user);
       } catch (e) {
+        console.error(e);
         showToast("error", strings.biometricsAuthFailed());
         openURL("/");
       } finally {
@@ -241,12 +228,6 @@ const recoveryMethods: RecoveryMethod[] = [
     description: () => strings.recoveryKeyMethodDesc()
   },
   {
-    type: "backup",
-    testId: "step-backup",
-    title: () => strings.backupFileMethod(),
-    description: () => strings.backupFileMethodDesc()
-  },
-  {
     type: "reset",
     testId: "step-reset-account",
     title: () => strings.clearDataAndResetMethod(),
@@ -324,7 +305,7 @@ function RecoveryMethods(props: BaseRecoveryComponentProps<"methods">) {
 }
 
 function RecoveryKeyMethod(props: BaseRecoveryComponentProps<"method:key">) {
-  const { navigate } = props;
+  const { navigate, formData } = props;
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -349,15 +330,17 @@ function RecoveryKeyMethod(props: BaseRecoveryComponentProps<"method:key">) {
         subtitle: strings.keyRecoveryProgressDesc()
       }}
       onSubmit={async (form) => {
+        const recoveryKey = form.recoveryKey;
+        if (recoveryKey.length < 40) {
+          throw new Error(strings.invalidRecoveryKey());
+        }
+
         setProgress(0);
 
         const user = await db.user.getUser();
         if (!user) throw new Error(strings.notLoggedIn());
-        await useKeyStore
-          .getState()
-          .setValue("userEncryptionKey", form.recoveryKey);
-        await db.sync({ type: "fetch", force: true });
-        navigate("backup");
+        await useKeyStore.getState().setValue("userEncryptionKey", recoveryKey);
+        navigate("new", form);
       }}
     >
       <AuthField
@@ -367,8 +350,19 @@ function RecoveryKeyMethod(props: BaseRecoveryComponentProps<"method:key">) {
         helpText={strings.enterRecoveryKeyHelp()}
         autoComplete="none"
         autoFocus
+        defaultValue={formData?.recoveryKey || ""}
       />
-      <SubmitButton text={strings.startAccountRecovery()} />
+      <Flex sx={{ gap: 1 }}>
+        <Button
+          variant="secondary"
+          type="button"
+          sx={{ mt: 50, borderRadius: 50 }}
+          onClick={() => navigate("methods")}
+        >
+          {strings.back()}
+        </Button>
+        <SubmitButton text={strings.startAccountRecovery()} />
+      </Flex>
 
       <Button
         type="button"
@@ -379,86 +373,6 @@ function RecoveryKeyMethod(props: BaseRecoveryComponentProps<"method:key">) {
       >
         {strings.dontHaveRecoveryKey()}
       </Button>
-    </RecoveryForm>
-  );
-}
-
-function BackupFileMethod(props: BaseRecoveryComponentProps<"method:backup">) {
-  const { navigate } = props;
-  const [backupFile, setBackupFile] =
-    useState<BackupFileFormData["backupFile"]>();
-
-  useEffect(() => {
-    if (!backupFile) return;
-    const backupFileInput = document.getElementById("backupFile");
-    if (!(backupFileInput instanceof HTMLInputElement)) return;
-    backupFileInput.value = backupFile?.name;
-  }, [backupFile]);
-
-  return (
-    <RecoveryForm
-      testId="step-backup-file"
-      type="method:backup"
-      title={strings.accountRecovery()}
-      subtitle={
-        <ErrorText
-          sx={{ fontSize: "body" }}
-          error={strings.backupFileRecoveryError()}
-        />
-      }
-      onSubmit={async () => {
-        navigate("new", { backupFile, userResetRequired: true });
-      }}
-    >
-      <AuthField
-        id="backupFile"
-        type="text"
-        label={strings.selectBackupFile()}
-        helpText={strings.backupFileHelpText()}
-        autoComplete="none"
-        autoFocus
-        disabled
-        action={{
-          component: <Text variant={"body"}>{strings.browse()}</Text>,
-          onClick: async () => {
-            setBackupFile(await selectBackupFile());
-          }
-        }}
-      />
-      <SubmitButton text={strings.startAccountRecovery()} />
-
-      <Button
-        type="button"
-        mt={4}
-        variant={"anchor"}
-        onClick={() => navigate("methods")}
-        sx={{ color: "paragraph" }}
-      >
-        {strings.dontHaveBackupFile()}
-      </Button>
-    </RecoveryForm>
-  );
-}
-
-function BackupData(props: BaseRecoveryComponentProps<"backup">) {
-  const { navigate } = props;
-
-  return (
-    <RecoveryForm
-      testId="step-backup-data"
-      type="backup"
-      title={strings.backupYourData()}
-      subtitle={strings.backupYourDataDesc()}
-      loading={{
-        title: strings.backingUpData() + "...",
-        subtitle: strings.backingUpDataWait()
-      }}
-      onSubmit={async () => {
-        await createBackup({ rescueMode: true, mode: "full" });
-        navigate("new");
-      }}
-    >
-      <SubmitButton text={strings.downloadBackupFile()} />
     </RecoveryForm>
   );
 }
@@ -487,23 +401,29 @@ function NewPassword(props: BaseRecoveryComponentProps<"new">) {
         subtitle: strings.resetPasswordWait()
       }}
       onSubmit={async (form) => {
-        setProgress(0);
+        try {
+          setProgress(0);
 
-        if (form.password !== form.confirmPassword)
-          throw new Error("Passwords do not match.");
+          if (form.password !== form.confirmPassword)
+            throw new Error("Passwords do not match.");
 
-        if (formData?.userResetRequired && !(await db.user.resetUser()))
-          throw new Error("Failed to reset user.");
+          if (formData?.userResetRequired && !(await db.user.resetUser()))
+            throw new Error("Failed to reset user.");
 
-        if (!(await db.user.resetPassword(form.password)))
-          throw new Error("Could not reset account password.");
+          if (!(await db.user.resetPassword(form.password)))
+            throw new Error("Could not reset account password.");
 
-        if (formData?.backupFile) {
-          await restoreBackupFile(formData?.backupFile);
-          await db.sync({ type: "full", force: true });
+          navigate("final");
+        } catch (e) {
+          if ((e as Error).message === "invalid input") {
+            console.error(e);
+            throw new Error(
+              "Password reset failed because of invalid recovery key"
+            );
+          }
+
+          throw e;
         }
-
-        navigate("final");
       }}
     >
       {(form?: NewPasswordFormData) => (
@@ -523,7 +443,22 @@ function NewPassword(props: BaseRecoveryComponentProps<"new">) {
             label={strings.confirmPassword()}
             defaultValue={form?.confirmPassword}
           />
-          <SubmitButton text={strings.continue()} />
+          <Flex sx={{ gap: 1 }}>
+            <Button
+              variant="secondary"
+              type="button"
+              sx={{ mt: 50, borderRadius: 50 }}
+              onClick={() =>
+                navigate(
+                  formData?.userResetRequired ? "methods" : "method:key",
+                  formData
+                )
+              }
+            >
+              {strings.back()}
+            </Button>
+            <SubmitButton text={strings.continue()} />
+          </Flex>
         </>
       )}
     </RecoveryForm>
@@ -531,39 +466,20 @@ function NewPassword(props: BaseRecoveryComponentProps<"new">) {
 }
 
 function Final(_props: BaseRecoveryComponentProps<"final">) {
-  const [isReady, setIsReady] = useState(false);
   useEffect(() => {
     async function finalize() {
       await RecoveryKeyDialog.show({});
-      if (!isSessionExpired()) {
-        await db.user.logout(true, "Password changed.");
+      if (isSessionExpired()) {
+        openURL("/sessionexpired");
+      } else {
         await db.user.clearSessions(true);
+        openURL("/login");
       }
-      setIsReady(true);
     }
     finalize();
   }, []);
 
-  if (!isReady && !isSessionExpired)
-    return <Loader text="" title={strings.loading() + "..."} />;
-
-  return (
-    <RecoveryForm
-      testId="step-finished"
-      type="final"
-      title={strings.recoverySuccess()}
-      subtitle={strings.recoverySuccessDesc()}
-      onSubmit={async () => {
-        openURL(isSessionExpired() ? "/sessionexpired" : "/login");
-      }}
-    >
-      <SubmitButton
-        text={
-          isSessionExpired() ? strings.continue() : strings.loginToYourAccount()
-        }
-      />
-    </RecoveryForm>
-  );
+  return null;
 }
 
 type RecoveryFormProps<TType extends RecoveryRoutes> = {
@@ -643,7 +559,7 @@ export function RecoveryForm<T extends RecoveryRoutes>(
         {subtitle}
       </Text>
       {typeof children === "function" ? children(form) : children}
-      <ErrorText error={error} />
+      <ErrorText error={error} sx={{ mt: 2 }} />
     </Flex>
   );
 }

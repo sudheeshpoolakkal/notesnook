@@ -92,17 +92,17 @@ export const SessionExpired = () => {
 
   const open = React.useCallback(async () => {
     try {
-      let res = await db.tokenManager.getToken();
+      const res = await db.tokenManager.getToken();
       if (!res) throw new Error("no token found");
       if (db.tokenManager._isTokenExpired(res))
         throw new Error("token expired");
 
-      const key = await db.user.getEncryptionKey();
+      const key = await db.user.getDataEncryptionKeys();
       if (!key) throw new Error("No encryption key found.");
 
       Sync.run("global", false, "full", async (complete) => {
         if (!complete) {
-          let user = await db.user.getUser();
+          const user = await db.user.getUser();
           if (!user) return;
           email.current = user.email;
           setVisible(true);
@@ -115,7 +115,7 @@ export const SessionExpired = () => {
         setVisible(false);
       });
     } catch (e) {
-      let user = await db.user.getUser();
+      const user = await db.user.getUser();
       if (!user) return;
       email.current = user.email;
       setFocused(false);

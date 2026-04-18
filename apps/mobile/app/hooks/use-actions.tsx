@@ -21,6 +21,7 @@ import { isFeatureAvailable, useAreFeaturesAvailable } from "@notesnook/common";
 import {
   Color,
   createInternalLink,
+  isEncryptedContent,
   Item,
   ItemReference,
   Note,
@@ -32,7 +33,7 @@ import { useThemeColors } from "@notesnook/theme";
 import { DisplayedNotification } from "@notifee/react-native";
 import Clipboard from "@react-native-clipboard/clipboard";
 import React, { useEffect, useRef, useState } from "react";
-import { InteractionManager, Platform, View } from "react-native";
+import { InteractionManager, Platform } from "react-native";
 import Share from "react-native-share";
 import { DatabaseLogger, db } from "../common/database";
 import { AttachmentDialog } from "../components/attachments";
@@ -54,7 +55,8 @@ import {
   eSubscribeEvent,
   openVault,
   presentSheet,
-  ToastManager
+  ToastManager,
+  VaultRequestType
 } from "../services/event-manager";
 import Navigation from "../services/navigation";
 import Notifications from "../services/notifications";
@@ -70,8 +72,8 @@ import { useUserStore } from "../stores/use-user-store";
 import { eCloseSheet, eUpdateNoteInEditor } from "../utils/events";
 import { deleteItems } from "../utils/functions";
 import { convertNoteToText } from "../utils/note-to-text";
-import { sleep } from "../utils/time";
 import { NotesnookModule } from "../utils/notesnook-module";
+import { sleep } from "../utils/time";
 
 import DatePickerComponent from "../components/date-picker";
 
@@ -194,7 +196,7 @@ export const useActions = ({
     "expiringNotes"
   ]);
   const [item, setItem] = useState(propItem);
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const setMenuPins = useMenuStore((state) => state.setMenuPins);
   const [isPinnedToMenu, setIsPinnedToMenu] = useState(
     db.shortcuts.exists(item.id)
@@ -220,7 +222,15 @@ export const useActions = ({
 
   useEffect(() => {
     if (item.type === "note") {
-      db.vaults.itemExists(item).then((locked) => setLocked(locked));
+      db.vaults.itemExists(item).then(async (locked) => {
+        setLocked(locked);
+        if (!locked) {
+          const content = await db.content.findByNoteId(item.id);
+          if (content && isEncryptedContent(content)) {
+            setLocked(true);
+          }
+        }
+      });
     }
   }, [item]);
 
@@ -372,6 +382,16 @@ export const useActions = ({
   }
 
   const deleteItem = async () => {
+    if (isPublished) {
+      ToastManager.show({
+        heading: strings.notePublished(),
+        message: strings.unpublishToDelete(),
+        type: "error",
+        context: "local"
+      });
+      return;
+    }
+
     close();
     await sleep(300);
 
@@ -408,12 +428,12 @@ export const useActions = ({
 
     if (item.type === "note" && (await db.vaults.itemExists(item))) {
       openVault({
-        deleteNote: true,
-        novault: true,
-        locked: true,
+        requestType: VaultRequestType.DeleteNote,
         item: item,
         title: strings.deleteNote(),
-        description: strings.unlockToDelete()
+        description: strings.unlockToDelete(),
+        buttonTitle: strings.delete(),
+        positiveButtonType: "errorShade"
       });
     } else {
       try {
@@ -867,11 +887,10 @@ export const useActions = ({
           close();
           await sleep(300);
           openVault({
+            requestType: VaultRequestType.ShareNote,
             item: item,
-            novault: true,
-            locked: true,
-            share: true,
-            title: strings.shareNote()
+            title: strings.shareNote(),
+            buttonTitle: strings.share()
           });
         } else {
           processingId.current = "shareNote";
@@ -896,11 +915,10 @@ export const useActions = ({
         close();
         await sleep(300);
         openVault({
+          requestType: VaultRequestType.PermanentUnlock,
           item: item,
-          novault: true,
-          locked: true,
-          permanant: true,
-          title: strings.unlockNote()
+          title: strings.unlockNote(),
+          buttonTitle: strings.unlock()
         });
         return;
       }
@@ -918,17 +936,18 @@ export const useActions = ({
         switch ((e as Error).message) {
           case VAULT_ERRORS.noVault:
             openVault({
+              requestType: VaultRequestType.CreateVault,
               item: item,
-              novault: false,
-              title: strings.createVault()
+              title: strings.createVault(),
+              buttonTitle: strings.lock()
             });
             break;
           case VAULT_ERRORS.vaultLocked:
             openVault({
+              requestType: VaultRequestType.LockNote,
               item: item,
-              novault: true,
-              locked: true,
-              title: strings.lockNote()
+              title: strings.lockNote(),
+              buttonTitle: strings.lock()
             });
             break;
         }
@@ -949,11 +968,10 @@ export const useActions = ({
           close();
           await sleep(300);
           openVault({
-            copyNote: true,
-            novault: true,
-            locked: true,
+            requestType: VaultRequestType.CopyNote,
             item: item as Note,
-            title: strings.copyNote()
+            title: strings.copyNote(),
+            buttonTitle: strings.copy()
           });
         } else {
           processingId.current = "copyContent";
@@ -1229,7 +1247,8 @@ export const useActions = ({
           : strings.moveToTrash(),
       icon: "delete-outline",
       type: "error",
-      onPress: deleteItem
+      onPress: deleteItem,
+      locked: isPublished
     });
   }
 
@@ -1267,7 +1286,10 @@ export const useActions = ({
             (item as Note).headline || (item as Notebook).description || "",
             (item as Color).colorCode
           );
-        } catch (e) {}
+        } catch (e) {
+          /**
+          empty */
+        }
       }
     });
   }

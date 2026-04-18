@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { parseInternalLink } from "@notesnook/core";
+import { NativeEvents } from "@notesnook/editor-mobile/src/utils/native-events";
 import { createRef, MutableRefObject, RefObject } from "react";
 import { TextInput } from "react-native";
 import WebView from "react-native-webview";
@@ -28,10 +29,8 @@ import {
   eUnSubscribeEvent
 } from "../../../services/event-manager";
 import { eOnLoadNote } from "../../../utils/events";
-import { NotesnookModule } from "../../../utils/notesnook-module";
-import { AppState, EditorState, useEditorType } from "./types";
+import { EditorState, useEditorType } from "./types";
 import { useTabStore } from "./use-tab-store";
-import { NativeEvents } from "@notesnook/editor-mobile/src/utils/native-events";
 
 export const textInput = createRef<TextInput>();
 export const editorController =
@@ -139,34 +138,6 @@ export function isContentInvalid(content: string | undefined) {
     content === "<p><br></p>" ||
     content === "<p>&nbsp;</p>"
   );
-}
-
-const canRestoreAppState = (appState: AppState) => {
-  return appState.editing && Date.now() < appState.timestamp + 3600000;
-};
-
-let appState: AppState | undefined;
-export function setAppState(state: AppState) {
-  appState = state;
-}
-export function getAppState() {
-  if (appState && canRestoreAppState(appState)) return appState as AppState;
-  const json = NotesnookModule.getAppState();
-  if (json) {
-    appState = JSON.parse(json) as AppState;
-    if (canRestoreAppState(appState)) {
-      return appState;
-    } else {
-      clearAppState();
-      return null;
-    }
-  }
-  return null;
-}
-
-export function clearAppState() {
-  appState = undefined;
-  NotesnookModule.setAppState("");
 }
 
 export async function openInternalLink(url: string) {

@@ -33,6 +33,10 @@ import {
 } from "./utils";
 import Upload from "@ammarahmed/react-native-upload";
 import { CloudUploader } from "react-native-nitro-cloud-uploader";
+import { useUserStore } from "../../stores/use-user-store";
+import { sleep } from "../../utils/time";
+import { isFeatureAvailable } from "@notesnook/common";
+import { strings } from "@notesnook/intl";
 
 // Upload constants
 const CHUNK_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -197,6 +201,20 @@ export async function uploadFile(
     const remoteFileSize = await getUploadedFileSize(filename);
     if (remoteFileSize === FileSizeResult.Error) return false;
 
+    const featureResult = await isFeatureAvailable(
+      "fileSize",
+      fileInfo.size || 0
+    );
+
+    if (!featureResult.isAllowed) {
+      ToastManager.show({
+        heading: strings.fileTooLarge(),
+        message: featureResult.error,
+        type: "error"
+      });
+      return false;
+    }
+
     if (
       remoteFileSize > FileSizeResult.Empty &&
       remoteFileSize === fileInfo.size
@@ -212,6 +230,9 @@ export async function uploadFile(
     );
 
     if (Platform.OS === "android") {
+      useUserStore.setState({
+        disableAppLockRequests: true
+      });
       const status = await PermissionsAndroid.request(
         "android.permission.POST_NOTIFICATIONS"
       );
@@ -221,6 +242,10 @@ export async function uploadFile(
           type: "info"
         });
       }
+      await sleep(500);
+      useUserStore.setState({
+        disableAppLockRequests: false
+      });
     }
 
     let uploaded = false;

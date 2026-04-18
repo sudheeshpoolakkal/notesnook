@@ -24,13 +24,7 @@ import { strings } from "@notesnook/intl";
 import { useThemeColors } from "@notesnook/theme";
 import { keepLocalCopy, pick } from "@react-native-documents/picker";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Platform,
-  ScrollView,
-  View
-} from "react-native";
+import { ActivityIndicator, Platform, ScrollView, View } from "react-native";
 import RNFetchBlob, { ReactNativeBlobUtilStat } from "react-native-blob-util";
 import * as ScopedStorage from "react-native-scoped-storage";
 import { unzip } from "react-native-zip-archive";
@@ -570,13 +564,17 @@ const BackupItem = ({
             paragraph: strings.restoreBackupConfirm(),
             positiveText: strings.restore(),
             negativeText: strings.cancel(),
+            context: "global",
             positivePress: async () => {
-              restoreBackup({
-                uri:
-                  Platform.OS === "android"
-                    ? (item as ScopedStorage.FileType).uri
-                    : (item as ReactNativeBlobUtilStat).path
-              });
+              setTimeout(() => {
+                restoreBackup({
+                  uri:
+                    Platform.OS === "android"
+                      ? (item as ScopedStorage.FileType).uri
+                      : (item as ReactNativeBlobUtilStat).path
+                });
+              }, 500);
+              return true;
             }
           });
         }}

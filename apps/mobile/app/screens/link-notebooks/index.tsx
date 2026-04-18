@@ -45,7 +45,10 @@ import { AddNotebookSheet } from "../../components/sheets/add-notebook";
 import { Notice } from "../../components/ui/notice";
 import { useNavigationFocus } from "../../hooks/use-navigation-focus";
 import { isFeatureAvailable } from "@notesnook/common";
-import { ToastManager } from "../../services/event-manager";
+import {
+  sendItemUpdateEvent,
+  ToastManager
+} from "../../services/event-manager";
 import PaywallSheet from "../../components/sheets/paywall";
 
 const {
@@ -175,6 +178,7 @@ const LinkNotebooks = (props: NavigationProps<"LinkNotebooks">) => {
           updateNotebook(item.id);
         }
       }
+      sendItemUpdateEvent(id, "notebook");
     }
 
     Navigation.queueRoutesForUpdate();

@@ -141,6 +141,23 @@ test("search reminders", () =>
   }));
 
 describe("notesWithHighlighting", () => {
+  test("search notes with nbsp in should decode html entities", () =>
+    noteTest({
+      title: "(with nbsp)",
+      content: {
+        type: "tiptap",
+        data: "<p>hello&nbsp;i&nbsp;am&nbsp;a&nbsp;note</p>"
+      }
+    }).then(async ({ db }) => {
+      const filtered = await db.lookup.notesWithHighlighting(
+        "hello",
+        db.notes.all
+      );
+      const item = await filtered.item(0);
+      expect(item.item).toBeDefined();
+      expect(item.item.content[0][0].suffix.includes("&nbsp;")).toBe(false);
+    }));
+
   test("search notes with parentheses in query should load the item", () =>
     noteTest({
       title: "(with parantheses)"
@@ -152,5 +169,44 @@ describe("notesWithHighlighting", () => {
       );
       const item = await filtered.item(0);
       expect(item.item).toBeDefined();
+    }));
+
+  test("search notes with brackets in query should load the item", () =>
+    noteTest({
+      title: "[with brackets]"
+    }).then(async ({ db }) => {
+      await db.notes.add(TEST_NOTE);
+      const filtered = await db.lookup.notesWithHighlighting(
+        "[with brackets]",
+        db.notes.all
+      );
+      const item = await filtered.item(0);
+      expect(item.item).toBeDefined();
+    }));
+
+  test("search should be diacritic agnostic", () =>
+    databaseTest().then(async (db) => {
+      await db.notes.add({ title: "outdoor café" });
+      await db.notes.add({
+        title: "today",
+        content: { type: "tiptap", data: "<p>I went to café</p>" }
+      });
+      await db.notes.add({ title: "indoor cafe" });
+      await db.notes.add({
+        title: "yesterday",
+        content: { type: "tiptap", data: "<p>I went to a cafe</p>" }
+      });
+
+      const searchWithoutDiacritics = await db.lookup.notesWithHighlighting(
+        "cafe",
+        db.notes.all
+      );
+      expect(searchWithoutDiacritics.length).toBe(4);
+
+      const searchWithDiacritics = await db.lookup.notesWithHighlighting(
+        "café",
+        db.notes.all
+      );
+      expect(searchWithDiacritics.length).toBe(4);
     }));
 });

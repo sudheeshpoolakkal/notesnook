@@ -161,10 +161,10 @@ export async function checkUpload(
     size === 0
       ? `File size is 0.`
       : size === -1
-        ? `File verification check failed.`
-        : expectedSize !== decryptedLength
-          ? `File size mismatch. Expected ${size} bytes but got ${decryptedLength} bytes.`
-          : undefined;
+      ? `File verification check failed.`
+      : expectedSize !== decryptedLength
+      ? `File size mismatch. Expected ${size} bytes but got ${decryptedLength} bytes.`
+      : undefined;
   if (error) throw new Error(error);
 }
 
@@ -193,3 +193,7 @@ export async function checkAndCreateDir(path: string) {
 export const santizeUri = (uri: string) => {
   return Platform.OS === "ios" ? decodeURI(uri).replace("file:///", "/") : uri;
 };
+
+export function isSuccessStatusCode(statusCode: number) {
+  return statusCode >= 200 && statusCode <= 299;
+}

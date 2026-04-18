@@ -94,7 +94,7 @@ export default function List(props: ListProps) {
     (item: number | boolean, index: number) => {
       return props.data?.type(index);
     },
-    []
+    [props.data]
   );
 
   const renderItem = React.useCallback(

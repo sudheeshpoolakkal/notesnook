@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { getFormattedDate } from "@notesnook/common";
 import {
   EncryptedContentItem,
-  isEncryptedContent,
   Note,
   UnencryptedContentItem
 } from "@notesnook/core";
@@ -41,7 +40,8 @@ import {
   eSendEvent,
   eSubscribeEvent,
   eUnSubscribeEvent,
-  openVault
+  openVault,
+  VaultRequestType
 } from "../../services/event-manager";
 import Navigation from "../../services/navigation";
 import Sync from "../../services/sync";
@@ -59,6 +59,7 @@ import { IconButton } from "../ui/icon-button";
 import Seperator from "../ui/seperator";
 import Paragraph from "../ui/typography/paragraph";
 import { presentDialog } from "../dialog/functions";
+import { Cipher } from "@notesnook/crypto";
 
 const MergeConflicts = () => {
   const { colors } = useThemeColors();
@@ -73,9 +74,9 @@ const MergeConflicts = () => {
   const { height } = useSettingStore((state) => state.dimensions);
 
   const applyChanges = async () => {
-    let contentToSave = selectedContent;
+    const contentToSave = selectedContent;
     if (!contentToSave) return;
-    let note = await db.notes.note(contentToSave.noteId);
+    const note = await db.notes.note(contentToSave.noteId);
     if (!note) return;
     await db.notes.add({
       id: note.id,
@@ -83,12 +84,21 @@ const MergeConflicts = () => {
       dateEdited: contentToSave.dateEdited
     });
 
-    const noteLocked = await db.vaults.itemExists(note);
+    const noteContent = await db.content.findByNoteId(note.id);
 
-    if (noteLocked) {
-      await db.vault.save({
-        ...contentToSave,
-        sessionId: `${Date.now()}`
+    if (noteContent?.locked) {
+      const selectedContent = contentToSave.conflicted
+        ? noteContent
+        : noteContent.conflicted;
+
+      await db.content.add({
+        id: note.contentId,
+        dateResolved: noteContent?.conflicted?.dateModified || Date.now(),
+        sessionId: `${Date.now()}`,
+        data: selectedContent?.data as Cipher<"base64">,
+        type: selectedContent?.type,
+        locked: true,
+        conflicted: undefined
       });
     } else {
       await db.content.add({
@@ -128,14 +138,15 @@ const MergeConflicts = () => {
     let noteContent: UnencryptedContentItem;
     if (isLocked) {
       openVault({
+        requestType: VaultRequestType.CustomAction,
         item: item,
-        novault: true,
-        customActionTitle: "Unlock note",
-        customActionParagraph: "Unlock note to merge conflicts",
+        title: strings.unlockNote(),
+        customActionTitle: strings.unlockNote(),
+        customActionParagraph: strings.unlockNoteToMergeConflicts(),
+        buttonTitle: strings.unlock(),
         onUnlock: async (item, password) => {
           if (!item || !password) return;
           const currentContent = await db.content.get(item.contentId!);
-
           try {
             noteContent = {
               ...(await db.content.get(item.contentId!)),
@@ -450,7 +461,8 @@ const MergeConflicts = () => {
             <ReadonlyEditor
               editorId="conflictSecondary"
               onLoad={async (loadContent) => {
-                const note = await db.notes.note(content.current?.noteId!);
+                if (!content.current?.noteId) return;
+                const note = await db.notes.note(content.current?.noteId);
                 if (!note) return;
                 loadContent({
                   id: note.id,

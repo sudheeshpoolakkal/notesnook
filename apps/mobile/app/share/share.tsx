@@ -71,17 +71,18 @@ import { initDatabase, useShareStore } from "./store";
 import { isTablet } from "react-native-device-info";
 import { NotesnookModule } from "../utils/notesnook-module";
 import { DefaultAppStyles } from "../utils/styles";
+import { encodeHTML5 } from "entities";
 
 const getLinkPreview = (url: string) => {
   return getPreviewData(url, 5000);
 };
 async function sanitizeHtml(site: string, title?: string) {
   try {
-    let html = await fetchHandle.current?.processUrl(site);
+    const html = await fetchHandle.current?.processUrl(site);
     return (
       html +
       "<hr/>" +
-      `<p>Clipped from <a href="${site}">${title || site}</a></p>
+      `<p>Clipped from <a href="${site}">${encodeHTML5(title || site)}</a></p>
 <p>Date clipped ${getFormattedDate(Date.now())}</p>`
     );
   } catch (e) {
@@ -96,7 +97,7 @@ function makeHtmlFromUrl(url: string) {
 function makeHtmlFromPlainText(text: string) {
   if (!text) return "";
 
-  return `<p>${text
+  return `<p>${encodeHTML5(text)
     .replace(/[\n]+/g, "\n")
     .replace(/(?:\r\n|\r|\n)/g, "</p><p>")}</p>`;
 }
@@ -111,7 +112,7 @@ type DefaultNote = {
   };
 };
 
-let defaultNote: DefaultNote = {
+const defaultNote: DefaultNote = {
   title: "",
   id: undefined,
   content: {
@@ -173,7 +174,8 @@ const ShareView = () => {
   const [compress, setCompress] = useState(true);
   globalThis["IS_SHARE_EXTENSION"] = true;
   const onKeyboardDidShow = (event: KeyboardEvent) => {
-    let height = Dimensions.get("screen").height - event.endCoordinates.screenY;
+    const height =
+      Dimensions.get("screen").height - event.endCoordinates.screenY;
     if (height < 100) {
       setKeyboardHeight(0);
       keyboardHeightRef.current = 0;
@@ -189,11 +191,11 @@ const ShareView = () => {
   };
 
   useEffect(() => {
-    let keyboardDidShow = Keyboard.addListener(
+    const keyboardDidShow = Keyboard.addListener(
       "keyboardDidShow",
       onKeyboardDidShow
     );
-    let keyboardDidHide = Keyboard.addListener(
+    const keyboardDidHide = Keyboard.addListener(
       "keyboardDidHide",
       onKeyboardDidHide
     );
@@ -210,10 +212,10 @@ const ShareView = () => {
   }, [fullQualityImages]);
 
   const showLinkPreview = async (note: DefaultNote, link: string) => {
-    let _note = note;
+    const _note = note;
     _note.content.data = makeHtmlFromUrl(link);
     try {
-      let preview = await getLinkPreview(link);
+      const preview = await getLinkPreview(link);
       _note.title = preview.title;
     } catch (e) {
       console.log(e);
@@ -259,7 +261,7 @@ const ShareView = () => {
         }
 
         let note = { ...defaultNote };
-        for (let item of data) {
+        for (const item of data) {
           if (item.type === "text") {
             setRawData(item);
             if (isURL(item.value)) {
@@ -356,7 +358,7 @@ const ShareView = () => {
         return;
       }
 
-      let rawContent = note.contentId
+      const rawContent = note.contentId
         ? await db.content.get(note.contentId)
         : null;
       noteData = {
@@ -405,7 +407,7 @@ const ShareView = () => {
       if (value === 2) {
         setLoadingPage(true);
         setTimeout(async () => {
-          let html = await sanitizeHtml(rawData?.value || "", note.title);
+          const html = await sanitizeHtml(rawData?.value || "", note.title);
           noteContent.current = html || "";
           setLoadingPage(false);
           onLoad();
@@ -416,7 +418,7 @@ const ShareView = () => {
         }, 300);
       } else {
         setLoadingPage(false);
-        let html = !rawData.value
+        const html = !rawData.value
           ? ""
           : isURL(rawData?.value)
             ? makeHtmlFromUrl(rawData?.value)

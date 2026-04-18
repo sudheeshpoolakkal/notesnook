@@ -2275,7 +2275,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-upload (6.31.0):
+  - react-native-upload (6.33.0):
     - React
   - react-native-view-shot (4.0.3):
     - boost
@@ -2872,7 +2872,7 @@ PODS:
     - React-perflogger (= 0.82.1)
     - React-utils (= 0.82.1)
     - SocketRocket
-  - RNBackgroundFetch (4.2.2):
+  - RNBackgroundFetch (4.2.3):
     - React-Core
   - RNBootSplash (6.3.11):
     - boost
@@ -3092,10 +3092,10 @@ PODS:
     - Yoga
   - RNKeychain (4.0.5):
     - React
-  - RNNotifee (7.4.11):
+  - RNNotifee (7.4.12):
     - React-Core
-    - RNNotifee/NotifeeCore (= 7.4.11)
-  - RNNotifee/NotifeeCore (7.4.11):
+    - RNNotifee/NotifeeCore (= 7.4.12)
+  - RNNotifee/NotifeeCore (7.4.12):
     - React-Core
   - RNPrivacySnapshot (1.0.0):
     - React-Core
@@ -3946,7 +3946,7 @@ SPEC CHECKSUMS:
   react-native-share-extension: fdc6aaab51591a2d445df239c446aaa3a99658ec
   react-native-sodium: 066f76e46c9be13e9260521e3fa994937c4cdab4
   react-native-theme-switch-animation: 449d6db7a760f55740505e7403ae8061debc9a7e
-  react-native-upload: 6285965d20879bcfcf7953f05eb785ba03a60e40
+  react-native-upload: 7b7ad336c3db703b68a8c07cf38e9319ae90d695
   react-native-view-shot: 6c008e58f4720de58370848201c5d4a082c6d4ca
   react-native-webview: 654f794a7686b47491cf43aa67f7f428bea00eed
   React-NativeModulesApple: 46690a0fe94ec28fc6fc686ec797b911d251ded0
@@ -3981,7 +3981,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: a45ef34bb22dc1c9b2ac1f74167d9a28af961176
   ReactCodegen: 878add6c7d8ff8cea87697c44d29c03b79b6f2d9
   ReactCommon: 804dc80944fa90b86800b43c871742ec005ca424
-  RNBackgroundFetch: 0c49d5892a0e2f9c139e24ba498985cf0bf070c6
+  RNBackgroundFetch: 7b9281af0b21100c3c5ef07d1df9ab1adf2dc686
   RNBootSplash: 98a34471966945e8dacd1da8f0c2f87cbc2e2df7
   RNCCheckbox: 33b44487ca8008394ce658cc32b26eab04f426ef
   RNCClipboard: 4b58c780f63676367640f23c8e114e9bd0cf86ac
@@ -3994,7 +3994,7 @@ SPEC CHECKSUMS:
   RNIap: 61f183ac917792fae42b0326b1bef33598c1adf6
   RNImageCropPicker: 5fd4ceaead64d8c53c787e4e559004f97bc76df7
   RNKeychain: ffd0513e676445c637410b47249460cbf56bc9cb
-  RNNotifee: c4827fa2cec60ab634d62bafdb5cf57cd2999d54
+  RNNotifee: dea82c9ec44684eeeac9da85deb5eeb8ebe5937f
   RNPrivacySnapshot: ccad3a548338c2f526bb7b1789af3fb0618b7d1d
   RNReanimated: f1868b36f4b2b52a0ed00062cfda69506f75eaee
   RNScreens: ffbb0296608eb3560de641a711bbdb663ed1f6b4
@@ -4013,6 +4013,6 @@ SPEC CHECKSUMS:
   toolbar-android: c426ed5bd3dcccfed20fd79533efc0d1ae0ef018
   Yoga: 689c8e04277f3ad631e60fe2a08e41d411daf8eb
 
-PODFILE CHECKSUM: 3021ad3db20df40d4106c9be82d0100d9d447239
+PODFILE CHECKSUM: 3fe13efa8356dcc061862bfa9f453dcd12ede70a
 
 COCOAPODS: 1.16.2

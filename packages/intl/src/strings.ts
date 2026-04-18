@@ -570,7 +570,7 @@ $day$: Current day (eg. Monday)`,
   viewAllLinkedNotebooks: () => t`View all linked notebooks`,
   learnMore: () => t`Learn more`,
   addTag: () => t`Add tag`,
-  addTagDesc: () => t`You can add as many tags as you want.`,
+  addTagDesc: () => t`Create a tag to group related notes together.`,
   save: () => t`Save`,
   verify: () => t`Verify`,
   newTab: () => t`New tab`,
@@ -1075,7 +1075,7 @@ $day$: Current day (eg. Monday)`,
   logoutError: () => t`Error logging out`,
   deleteAccount: () => t`Delete account`,
   deleteAccountDesc: () =>
-    t`All your data will be removed permanently. Make sure you have saved backup of your notes. This action is IRREVERSIBLE.`,
+    t`Your account will be permanently deleted along with all your data, login credentials, and subscription information. This action is IRREVERSIBLE. Make sure you have saved a backup of your notes before proceeding.`,
   enterAccountPassword: () => t`Enter account password`,
   enterAccountPasswordDesc: () => t`Enter account password to proceed.`,
   failedToDeleteAccount: () => t`Failed to delete account`,
@@ -1837,7 +1837,7 @@ For example:
   incomingNote: () => t`Incoming note`,
   description: () => t`Description`,
   date: () => t`Date`,
-  month: () => t`month`,
+  month: () => t`Month`,
   day: () => t`Day`,
   time: () => t`Time`,
   encryptionKey: () => t`Encryption key`,
@@ -2225,7 +2225,8 @@ Use this if changes from other devices are not appearing on this device. This wi
   goBackToNotebooks: () => t`Go back to notebooks`,
   goBackToTags: () => t`Go back to tags`,
   okay: () => t`Okay`,
-  clearTrashDesc: () => t`Do you want to clear the trash?`,
+  clearTrashDesc: () =>
+    t`Clearing trash will permanently delete all the items in your trash. This action is IRREVERSIBLE.`,
   createdAt: () => t`Created at`,
   lastEditedAt: () => t`Last edited at`,
   enter6DigitCode: () =>
@@ -2562,7 +2563,10 @@ Use this if changes from other devices are not appearing on this device. This wi
   ],
   trialPlanConditions: [
     (duration: number) => t`Free ${duration} day trial, cancel any time`,
-    () => t`Google will remind you before your trial ends`
+    (platform: "ios" | "android") =>
+      t`${
+        platform === "ios" ? "Apple" : "Google"
+      } will remind you before your trial ends`
   ],
   purchase: () => t`Purchase`,
   subscribe: () => t`Subscribe`,
@@ -2632,5 +2636,15 @@ Use this if changes from other devices are not appearing on this device. This wi
   expiryDate: () => t`Expiry date`,
   exportCsv: () => t`Export CSV`,
   importCsv: () => t`Import CSV`,
-  noContent: () => t`This note is empty`
+  noContent: () => t`This note is empty`,
+  deleteData: () => t`Delete data`,
+  failedToAttachFile: () => t`Failed to attach file`,
+  unlockNoteToMergeConflicts: () => t`Unlock note to merge conflicts`,
+  confirmationEmailSent: () => t`Confirmation email sent`,
+  back: () => t`Back`,
+  invalidRecoveryKey: () =>
+    t`Invalid recovery key. Make sure to input your account recovery key, not a 2FA recovery code.`,
+  featureNotAvailable: () => t`This feature is not available on this plan.`,
+  valueMustBeBetween: (min: number, max: number) =>
+    t`Value must be between ${min} and ${max}`
 };
