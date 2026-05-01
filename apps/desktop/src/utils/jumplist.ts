@@ -95,5 +95,7 @@ function setDockMenuOnMacOs() {
       }
     }
   ]);
-  app.dock.setMenu(contextMenu);
+  if (app.dock) {
+    app.dock.setMenu(contextMenu);
+  }
 }

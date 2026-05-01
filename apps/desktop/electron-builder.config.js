@@ -42,6 +42,7 @@ const isBeta = pkg.version.includes("-beta");
  * @type {import("app-builder-lib").Configuration}
  */
 module.exports = {
+  npmRebuild: false,
   appId: appId,
   productName: productName,
   copyright: `Copyright © ${year} Streetwriters (Private) Limited`,

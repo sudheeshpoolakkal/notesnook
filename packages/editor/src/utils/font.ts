@@ -121,6 +121,26 @@ const FONTS = [
     font: `"OFL Goudy", serif`
   },
   {
+    title: "Anthropic Serif",
+    id: "anthropic-serif",
+    font: `"Anthropic Serif", serif`
+  },
+  {
+    title: "Adobe Jenson Pro",
+    id: "adobe-jenson-pro",
+    font: `"Adobe Jenson Pro", serif`
+  },
+  {
+    title: "Old Claude",
+    id: "old-claude",
+    font: `"Old Claude", serif`
+  },
+  {
+    title: "Old Claude Std",
+    id: "old-claude-std",
+    font: `"Old Claude Std", serif`
+  },
+  {
     title: "Old Standard TT",
     id: "old-standard-tt",
     font: `"Old Standard TT", serif`
