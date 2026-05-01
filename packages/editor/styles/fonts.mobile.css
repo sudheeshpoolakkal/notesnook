@@ -5,6 +5,27 @@
 /* FONT PATHS
  * -------------------------- */
 @font-face {
+  font-family: 'Old Claude';
+  src: url('./fonts/Old Claude LP Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Adobe Jenson Pro';
+  src: url('./fonts/Adobe Jenson Pro Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Old Claude Std';
+  src: url('./fonts/Old Claude LP Std Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "Hack";
   font-display: swap;
   src: url("fonts/hack-regular.ttf") format("truetype");
@@ -584,4 +605,23 @@
   font-weight: 700;
   font-display: swap;
   src: url("fonts/averiaserif-bolditalic.ttf") format("truetype");
+}
+
+/* Old Claude */
+@font-face {
+  font-family: "Old Claude";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Old Claude LP Regular.ttf") format("truetype");
+}
+
+/* Anthropic Serif */
+@font-face {
+  font-family: "Anthropic Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Anthropic-serif.woff2") format("woff2"),
+    url("fonts/Anthropic-serif.ttf") format("truetype");
 }
