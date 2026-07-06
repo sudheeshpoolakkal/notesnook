@@ -673,3 +673,12 @@
   font-display: swap;
   src: url("fonts/Lora-Italic.ttf") format("truetype");
 }
+
+/* Paterson */
+@font-face {
+  font-family: "Paterson";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/PatersonRegular-485D.ttf") format("truetype");
+}

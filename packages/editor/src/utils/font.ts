@@ -189,6 +189,11 @@ const FONTS = [
     title: "Lora",
     id: "lora",
     font: `"Lora", serif`
+  },
+  {
+    title: "Paterson",
+    id: "paterson",
+    font: `"Paterson", serif`
   }
 ];
 
