@@ -184,6 +184,11 @@ const FONTS = [
     title: "Spectral",
     id: "spectral",
     font: `"Spectral", serif`
+  },
+  {
+    title: "Lora",
+    id: "lora",
+    font: `"Lora", serif`
   }
 ];
 

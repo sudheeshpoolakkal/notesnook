@@ -625,3 +625,19 @@
   src: url("fonts/Anthropic-serif.woff2") format("woff2"),
     url("fonts/Anthropic-serif.ttf") format("truetype");
 }
+
+/* Lora */
+@font-face {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Lora-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Lora";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Lora-Italic.ttf") format("truetype");
+}
