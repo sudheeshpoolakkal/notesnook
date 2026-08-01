@@ -194,6 +194,41 @@ const FONTS = [
     title: "Paterson",
     id: "paterson",
     font: `"Paterson", serif`
+  },
+  {
+    title: "Abril Fatface",
+    id: "abril-fatface",
+    font: `"Abril Fatface", cursive`
+  },
+  {
+    title: "Bitter",
+    id: "bitter",
+    font: `"Bitter", serif`
+  },
+  {
+    title: "Bookerly",
+    id: "bookerly",
+    font: `"Bookerly", serif`
+  },
+  {
+    title: "EB Garamond",
+    id: "eb-garamond",
+    font: `"EB Garamond", serif`
+  },
+  {
+    title: "Peaky Blinders",
+    id: "peaky-blinders",
+    font: `"Peaky Blinders", fantasy`
+  },
+  {
+    title: "QT Bookmann",
+    id: "qt-bookmann",
+    font: `"QT Bookmann", serif`
+  },
+  {
+    title: "Rakuten Serif",
+    id: "rakuten-serif",
+    font: `"Rakuten Serif", serif`
   }
 ];
 

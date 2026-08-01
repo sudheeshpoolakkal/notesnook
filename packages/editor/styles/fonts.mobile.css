@@ -648,5 +648,173 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("fonts/PatersonRegular-485D.ttf") format("truetype");
+  src: url("./fonts/PatersonRegular-485D.ttf") format("truetype");
+}
+
+/* Abril Fatface */
+@font-face {
+  font-family: "Abril Fatface";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/AbrilFatface-Regular.ttf") format("truetype");
+}
+
+/* Bitter */
+@font-face {
+  font-family: "Bitter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Bitter-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Bitter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Bitter-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Bitter";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Bitter-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Bitter";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Bitter-BoldItalic.ttf") format("truetype");
+}
+
+/* Bookerly */
+@font-face {
+  font-family: "Bookerly";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Bookerly.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Bookerly";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Bookerly Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Bookerly";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Bookerly Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Bookerly";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/Bookerly Bold Italic.ttf") format("truetype");
+}
+
+/* EB Garamond */
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/EBGaramond-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/EBGaramond-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/EBGaramond-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/EBGaramond-BoldItalic.ttf") format("truetype");
+}
+
+/* Peaky Blinders */
+@font-face {
+  font-family: "Peaky Blinders";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Peaky Blinders.ttf") format("truetype");
+}
+
+/* QT Bookmann */
+@font-face {
+  font-family: "QT Bookmann";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/QTBookmann-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "QT Bookmann";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/QTBookmann-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "QT Bookmann";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/QTBookmann-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "QT Bookmann";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/QTBookmann-BoldItalic.ttf") format("truetype");
+}
+
+/* Rakuten Serif */
+@font-face {
+  font-family: "Rakuten Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/RakutenSerifApp-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Rakuten Serif";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/RakutenSerifApp-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Rakuten Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/RakutenSerifApp-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Rakuten Serif";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/RakutenSerifApp-BoldItalic.ttf") format("truetype");
 }

@@ -13,7 +13,7 @@ import (
 	"github.com/golang/freetype/truetype"
 )
 
-//go:embed *.ttf
+//go:embed *.ttf *.TTF *.otf
 var embedded embed.FS
 
 func init() {
