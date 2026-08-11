@@ -14,6 +14,7 @@ buildscript {
         androidXBrowser = "1.0.0"
         ndkVersion = "27.1.12297006"
         REACT_NATIVE_NODE_MODULES_DIR = "$rootDir/../node_modules/react-native"
+        playBillingSdkVersion = "8.0.0"
     }
     
     repositories {
