@@ -2289,7 +2289,7 @@ Use this if changes from other devices are not appearing on this device. This wi
   fontFamily: () => t`Font family`,
   fontSize: () => t`Font size`,
   headings: () => t`Headings`,
-  alignCenter: () => t`Alignment`,
+  alignCenter: () => t`Align center`,
   ltr: () => t`Text direction`,
   highlight: () => t`Highlight`,
   textColor: () => t`Text color`,
@@ -2316,7 +2316,7 @@ Use this if changes from other devices are not appearing on this device. This wi
   cellBorderColor: () => t`Cell border color`,
   cellTextColor: () => t`Cell text color`,
   cellBorderWidth: () => t`Cell border width`,
-  none: () => t`Cell border width`,
+  none: () => t`None`,
   imageSettings: () => t`Image settings`,
   // alignCenter: () => t`Align center`,
   alignLeft: () => t`Align left`,
@@ -2622,7 +2622,7 @@ Use this if changes from other devices are not appearing on this device. This wi
   clickToDirectlyClaimPromo: () =>
     t`Click here to directly claim the promotion.`,
   loginToUploadAttachments: () =>
-    t`Login to upload attachments. [Read more](https://help.notesnook.com/faqs/login-to-upload-attachments)`,
+    t`Login to upload attachments. [Read more](https://notesnook.com/help/faqs/login-to-upload-attachments)`,
   views: () => t`Views`,
   clickToUpdate: () => t`Click to update`,
   noPassword: () => t`No password`,
@@ -2738,7 +2738,7 @@ Use this if changes from other devices are not appearing on this device. This wi
   currentPasswordRequired: () => t`Current password required`,
   loginToRestoreAttachments: () => t`Login required to restore attachments`,
   loginToRestoreAttachmentsDesc: () =>
-    t`You need to login to restore attachments from a backup file. [Read more](https://help.notesnook.com/faqs/login-to-restore-attachments-in-backup).
+    t`You need to login to restore attachments from a backup file. [Read more](https://notesnook.com/help/faqs/login-to-restore-attachments-in-backup).
   
 Continue without attachments?`,
   pleaseLoginToDownloadAttachments: () =>
@@ -2809,5 +2809,6 @@ Continue without attachments?`,
   versionDeleted: () => actions.deleted.version(1),
   offlineMode: () => t`Offline mode`,
   offlineModeDesc: () =>
-    t`Using Notesnook without an account will NOT sync your notes across devices and could result in data loss if you lose access to your device or uninstall the app. Make sure to backup your notes regularly.`
+    t`Using Notesnook without an account will **NOT** sync your notes across devices and could result in data loss if you lose access to your device or uninstall the app. Make sure to backup your notes regularly.`,
+  alignment: () => t`Alignment`
 };

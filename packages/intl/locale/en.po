@@ -800,6 +800,10 @@ msgstr "Advanced"
 msgid "After scanning the QR code image, the app will display a code that you can enter below."
 msgstr "After scanning the QR code image, the app will display a code that you can enter below."
 
+#: src/strings.ts:2292
+msgid "Align center"
+msgstr "Align center"
+
 #: src/strings.ts:2322
 msgid "Align left"
 msgstr "Align left"
@@ -808,7 +812,7 @@ msgstr "Align left"
 msgid "Align right"
 msgstr "Align right"
 
-#: src/strings.ts:2292
+#: src/strings.ts:2813
 msgid "Alignment"
 msgstr "Alignment"
 
@@ -1419,7 +1423,6 @@ msgid "Cell border color"
 msgstr "Cell border color"
 
 #: src/strings.ts:2318
-#: src/strings.ts:2319
 msgid "Cell border width"
 msgstr "Cell border width"
 
@@ -4107,8 +4110,8 @@ msgid "Login to encrypt and sync notes"
 msgstr "Login to encrypt and sync notes"
 
 #: src/strings.ts:2625
-msgid "Login to upload attachments. [Read more](https://help.notesnook.com/faqs/login-to-upload-attachments)"
-msgstr "Login to upload attachments. [Read more](https://help.notesnook.com/faqs/login-to-upload-attachments)"
+msgid "Login to upload attachments. [Read more](https://notesnook.com/help/faqs/login-to-upload-attachments)"
+msgstr "Login to upload attachments. [Read more](https://notesnook.com/help/faqs/login-to-upload-attachments)"
 
 #: src/strings.ts:542
 msgid "Login to your account"
@@ -4553,6 +4556,7 @@ msgid "No updates available"
 msgstr "No updates available"
 
 #: src/strings.ts:661
+#: src/strings.ts:2319
 msgid "None"
 msgstr "None"
 
@@ -7490,8 +7494,8 @@ msgid "Using {instance} (v{version})"
 msgstr "Using {instance} (v{version})"
 
 #: src/strings.ts:2812
-msgid "Using Notesnook without an account will NOT sync your notes across devices and could result in data loss if you lose access to your device or uninstall the app. Make sure to backup your notes regularly."
-msgstr "Using Notesnook without an account will NOT sync your notes across devices and could result in data loss if you lose access to your device or uninstall the app. Make sure to backup your notes regularly."
+msgid "Using Notesnook without an account will **NOT** sync your notes across devices and could result in data loss if you lose access to your device or uninstall the app. Make sure to backup your notes regularly."
+msgstr "Using Notesnook without an account will **NOT** sync your notes across devices and could result in data loss if you lose access to your device or uninstall the app. Make sure to backup your notes regularly."
 
 #: src/strings.ts:2265
 msgid "Using official Notesnook instance"
@@ -7929,11 +7933,11 @@ msgstr "You must log out in order to change/reset server URLs."
 
 #: src/strings.ts:2741
 msgid ""
-"You need to login to restore attachments from a backup file. [Read more](https://help.notesnook.com/faqs/login-to-restore-attachments-in-backup).\n"
+"You need to login to restore attachments from a backup file. [Read more](https://notesnook.com/help/faqs/login-to-restore-attachments-in-backup).\n"
 "  \n"
 "Continue without attachments?"
 msgstr ""
-"You need to login to restore attachments from a backup file. [Read more](https://help.notesnook.com/faqs/login-to-restore-attachments-in-backup).\n"
+"You need to login to restore attachments from a backup file. [Read more](https://notesnook.com/help/faqs/login-to-restore-attachments-in-backup).\n"
 "  \n"
 "Continue without attachments?"
 
