@@ -33,10 +33,18 @@ const extensionToMimeType: Record<string, string> = {
   css: "text/css",
   svg: "image/svg+xml",
   png: "image/png",
-  jpg: "image/jpg",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  webp: "image/webp",
+  ico: "image/x-icon",
   ttf: "font/ttf",
+  otf: "font/otf",
   woff: "font/woff",
-  woff2: "font/woff2"
+  woff2: "font/woff2",
+  eot: "application/vnd.ms-fontobject",
+  wasm: "application/wasm",
+  txt: "text/plain",
+  xml: "application/xml"
 };
 
 function registerProtocol() {
